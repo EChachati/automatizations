@@ -1,0 +1,17 @@
+# VPN profiles — never commit credentials
+*.ovpn
+vpn/
+
+# Real env files with secrets
+.env
+.env.local
+.env.production
+
+# Archives
+*.zip
+
+# LocalStack runtime data
+docker/localstack/volume/
+
+# macOS
+.DS_Store

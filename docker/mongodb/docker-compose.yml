@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mongodb:
+    build: .
+    container_name: mongodb-limited
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=
+      - MONGO_INITDB_ROOT_PASSWORD=
+      - MONGO_INITDB_DATABASE=testdb
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongod.conf:/etc/mongod.conf:ro
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+    networks:
+      - app-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  app-network:
+    external: true
+
