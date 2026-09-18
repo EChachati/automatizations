@@ -25,6 +25,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOCKER_SOURCES="$SCRIPT_DIR/docker"   # repo folder with redis/, mongodb/, localstack/
 DOCKER_DIR="$HOME/docker"             # where services are deployed
 
+# Shell-agnostic env persistence (bash/zsh/fish)
+# shellcheck source=shell_config.sh
+source "$SCRIPT_DIR/shell_config.sh"
+
 # ========================
 #  Helpers
 # ========================
@@ -172,11 +176,8 @@ install_localstack() {
         if [ -z "$token" ]; then
             error "Auth token is required to run LocalStack"
         fi
-        if ! grep -q "LOCALSTACK_AUTH_TOKEN" "$HOME/.zshrc" 2>/dev/null; then
-            echo "" >> "$HOME/.zshrc"
-            echo "export LOCALSTACK_AUTH_TOKEN=\"$token\"" >> "$HOME/.zshrc"
-            success "Token saved to ~/.zshrc"
-        fi
+        append_env_export LOCALSTACK_AUTH_TOKEN "$token"
+        success "Token saved to shell config ($(get_shell_rc))"
         export LOCALSTACK_AUTH_TOKEN="$token"
     else
         success "LOCALSTACK_AUTH_TOKEN already set"

@@ -7,8 +7,19 @@ Everything here is designed to be reusable and free of any company-specific refe
 ## Requirements
 
 - Arch-based Linux distribution
-- Bash and Zsh
 - An AUR helper (`paru` or `yay`) — used by several scripts (the base setup can also install `paru`)
+
+## Shell support
+
+The scripts run under Bash (via `#!/usr/bin/env bash`), so they work no matter your login shell. Environment variables and persistent lines are written shell-agnostically through `shell_config.sh`:
+
+| Login shell | Config file written |
+|-------------|---------------------|
+| fish | `~/.config/fish/config.fish` (`set -gx NAME "value"`) |
+| zsh | `~/.zshrc` (`export NAME="value"`) |
+| bash | `~/.bashrc` (`export NAME="value"`) |
+
+`install-setup-arch.sh` detects your login shell: on fish it keeps it (and can also install/switch to fish or zsh + Oh My Zsh if you prefer from the interactive prompt).
 
 ## Scripts
 

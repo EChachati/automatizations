@@ -15,6 +15,12 @@ success() { echo -e "${GREEN}[OK]${RESET} $1"; }
 warning() { echo -e "${YELLOW}[WARN]${RESET} $1"; }
 error()   { echo -e "${RED}[ERROR]${RESET} $1"; exit 1; }
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Shell-agnostic env persistence and shell detection (bash/zsh/fish)
+# shellcheck source=shell_config.sh
+source "$SCRIPT_DIR/shell_config.sh"
+
 # ========================
 #  Detect AUR helper
 # ========================
@@ -123,12 +129,50 @@ install_pyenv() {
 # ========================
 install_base() {
     info "Installing base packages..."
-    for pkg in zsh git curl wget base-devel chezmoi; do
+    for pkg in git curl wget base-devel chezmoi; do
         pacman_install "$pkg"
     done
+
+    echo ""
+    echo -e "${CYAN}Shell setup:${RESET}"
+    local shell_name default choice
+    shell_name="$(get_shell_name)"
+    default="z"
+    if [ "$shell_name" = "fish" ]; then
+        default="f"
+    fi
+    echo "  Current login shell: $shell_name"
+    read -rp "  Choose (z)sh + oh-my-zsh, (f)ish, (k)eep current [$default]? " choice
+    choice="${choice:-$default}"
+
+    case "$choice" in
+        f|F)      install_fish ;;
+        k|K)      info "Keeping current shell: $shell_name" ;;
+        z|Z|*)    install_zsh ;;
+    esac
+
+    success "Base installed"
+}
+
+install_zsh() {
+    pacman_install zsh
     install_omz
     change_shell_zsh
-    success "Base installed"
+}
+
+install_fish() {
+    pacman_install fish
+    if [ "$(get_shell_name)" = "fish" ]; then
+        info "fish is already your login shell"
+    else
+        if command -v chsh &>/dev/null; then
+            echo -e "${YELLOW}Setting fish as login shell...${RESET}"
+            sudo chsh -s /usr/bin/fish "$USER"
+            success "fish set as login shell (effective on next login)"
+        else
+            warning "chsh not found, fish will not be set as login shell"
+        fi
+    fi
 }
 
 install_editors() {
@@ -277,7 +321,7 @@ while true; do
     echo "==============================="
     echo "   Personal machine setup"
     echo "==============================="
-    echo "1)  Base         (zsh, git, curl, oh-my-zsh)"
+    echo "1)  Base         (git, curl, oh-my-zsh / fish)"
     echo "2)  Editors      (zed, neovim, vscodium, cursor)"
     echo "3)  Docker       (docker, compose, lazydocker)"
     echo "4)  Gaming       (steam, lutris, wine)"
