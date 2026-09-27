@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Pre-commit hook: block a commit that looks like it carries a credential.
+#
+# Enabled through git's core.hooksPath, set by scripts/install-timer.sh, so
+# this file is versioned instead of living in .git/hooks where it would be
+# invisible to anyone else who clones the repo.
+#
+# This is a backstop, not a guarantee. The real boundary is
+# config/managed-paths.list; this only makes an obvious accident a no-op.
+set -uo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+scanner="$repo_root/scripts/secret-scan.sh"
+
+if [ ! -x "$scanner" ]; then
+    echo "pre-commit: $scanner not found or not executable, skipping" >&2
+    exit 0
+fi
+
+if ! "$scanner" --staged; then
+    echo "" >&2
+    echo "pre-commit: commit aborted. Review the lines above." >&2
+    echo "If one of them is a false positive, fix the pattern in" >&2
+    echo "scripts/secret-scan.sh or use --no-verify deliberately." >&2
+    exit 1
+fi
+
+exit 0

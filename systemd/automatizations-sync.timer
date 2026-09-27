@@ -1,0 +1,17 @@
+[Unit]
+Description=Keep the automatizations repository in sync with this machine
+
+[Timer]
+# A few times a day is enough. Config changes are what matter, and they
+# cluster around when you actually use the machine.
+OnCalendar=*-*-* 09,17:30:00
+# Catch up after the machine was off or suspended, so a long weekend does
+# not silently produce a backlog of drift.
+Persistent=true
+# Spread the load a little; without this every timer fires at the same
+# second on every machine running this repo.
+RandomizedDelaySec=20min
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

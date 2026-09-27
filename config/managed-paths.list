@@ -1,0 +1,73 @@
+# Paths this repo manages. One path per line, relative to $HOME.
+#
+# This is an ALLOWLIST, and it is the only boundary the automation has.
+# sync.sh never looks at anything not listed here, so a path missing from
+# this file is invisible to it by construction. That matters because this
+# repository is public: a blocklist would only protect what somebody
+# remembered to forbid, and a typical home directory has a long tail of
+# credential-bearing config.
+#
+# Rules for editing:
+#   - a plain line is a managed path, captured from $HOME when the repo
+#     has no copy of it
+#   - a line starting with "?" is report-only: checked for presence but
+#     never captured, for things generated per machine
+#   - "#" starts a comment, blank lines are ignored
+#
+# Prefer naming a specific file over listing a directory. An allowlisted
+# directory also allows whatever the app writes into it at runtime, and
+# sync.sh commits what it is allowed to see. Keep directories out of here
+# unless everything inside them is configuration you actually want.
+#
+# --- shell ---
+.zshenv
+.zshrc
+.bashrc
+.bash_profile
+.profile
+.gitconfig
+.config/fish
+.config/cachyos/cachyos-pi.conf
+
+# --- compositor, shell bar and lock screen ---
+.config/hypr
+.config/noctalia
+
+# --- terminals ---
+.config/kitty/kitty.conf
+.config/alacritty/alacritty.toml
+.config/foot/foot.ini
+
+# --- editors ---
+.config/micro/settings.json
+.config/micro/colorschemes
+
+# --- media ---
+.config/vlc/vlcrc
+.config/myx/config.toml
+.config/swash/settings.ini
+
+# --- system and desktop integration ---
+.config/kdeglobals
+.config/dolphinrc
+.config/mimeapps.list
+.config/pavucontrol.ini
+.config/trashrc
+.config/user-dirs.dirs
+.config/fastfetch
+.config/fastfetch-rotate.conf
+.config/gtk-3.0/gtk.css
+.config/gtk-3.0/settings.ini
+.config/gtk-4.0/gtk.css
+.config/qt6ct/qt6ct.conf
+.config/qt6ct/colors
+.config/qt6ct/qss
+
+# --- apps with real settings worth keeping ---
+.config/shelly
+.config/qView
+.config/endcord/config.ini
+.config/endcord/profiles.json
+
+# --- generated per machine, checked but never captured ---
+?.config/hypr/config/machine.lua

@@ -1,0 +1,23 @@
+[Unit]
+Description=Sync the automatizations repository with this machine
+Documentation=file:@REPO@/README.md
+# The service reads the pacman database, so do not race pacman itself.
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO@
+ExecStart=@REPO@/scripts/sync.sh
+# A failed sync should not be retried in a tight loop; the timer handles
+# the next attempt. Logging goes to the user journal, not to the console.
+SuccessExitStatus=0
+TimeoutStartSec=300
+
+# The sync only reads your config and writes to the repository, but keep
+# the blast radius small anyway. $HOME is read-only, which is the point:
+# a bug in the capture logic can never touch your live config.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=@REPO@ %h/.local/state/automatizations
