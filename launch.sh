@@ -60,7 +60,7 @@ while true; do
         3) run_script "install-dotfiles.sh" ;;
         4) run_script "install-git-ssh-connections.sh" ;;
         5) run_script "install-vpn-proton.sh" ;;
-        6) run_script "dotfiles/.config/noctalia/hide-apps.sh" ;;
+        6) run_script "../dotfiles/.config/noctalia/hide-apps.sh" ;;
         7) run_script "install-infra.sh" ;;
         8) run_script "install-dev-tools.sh" ;;
         s|S) run_script "sync.sh" ;;
