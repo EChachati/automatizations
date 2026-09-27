@@ -4,22 +4,19 @@
 #
 # Formato:  <id.desktop> = true|false     # Nombre
 #
-Alacritty.desktop                             = false # Alacritty
 avahi-discover.desktop                        = true  # Avahi Zeroconf Browser
 bssh.desktop                                  = true  # Avahi SSH Server Browser
 btop.desktop                                  = false # btop++
-btrfs-assistant.desktop                       = true # Btrfs Assistant
+btrfs-assistant.desktop                       = true  # Btrfs Assistant
 bvnc.desktop                                  = true  # Avahi VNC Server Browser
 cachyos-hello.desktop                         = true  # CachyOS Hello
 cachyos-pi.desktop                            = true  # CachyOS Package Installer
 com.interversehq.qView.desktop                = true  # qView
 com.obsproject.Studio.desktop                 = false # OBS Studio
 com.shellyorg.shelly.desktop                  = false # Shelly
-dev.lemmy.swash.desktop                       = false # Swash
+dev.lemmy.swash.desktop                       = true  # Swash
 dev.noctalia.Noctalia.desktop                 = true  # Noctalia
 discord.desktop                               = false # Discord
-firefox.desktop                               = false # Firefox
-gimp.desktop                                  = false # GNU Image Manipulation Program
 kitty.desktop                                 = false # kitty
 limine-snapper-restore.desktop                = false # Limine-snapper-restore
 localsend.desktop                             = false # LocalSend
@@ -28,7 +25,7 @@ micro.desktop                                 = false # Micro
 nvidia-settings.desktop                       = false # NVIDIA X Server Settings
 nwg-look.desktop                              = true  # GTK Settings
 obsidian.desktop                              = false # Obsidian
-org.cachyos.KernelManager.desktop             = true # CachyOS Kernel Manager
+org.cachyos.KernelManager.desktop             = true  # CachyOS Kernel Manager
 org.cachyos.scx-manager.desktop               = true  # SchedExt GUI Manager
 org.gnome.Calculator.desktop                  = false # Calculator
 org.gnome.TextEditor.desktop                  = true  # Text Editor

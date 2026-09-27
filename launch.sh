@@ -40,7 +40,7 @@ while true; do
     echo -e "  ${BOLD}── Services ─────────────────────────────${RESET}"
     echo "  4)  SSH keys                 (GitHub personal/work + GitLab)"
     echo "  5)  Proton VPN               (official CLI, sign-in, settings)"
-    echo "  6)  PostgreSQL               (install, init, Docker config)"
+    echo "  6)  Hide Apps                Hide apps from menu...  Check './dotfiles/.config/noctalia/hidden-apps.list'"
     echo "  7)  Docker infrastructure    (MinIO, Redis, MongoDB, LocalStack)"
     echo "  8)  Dev tools                (editors, python, cloud, claude)"
     echo ""
@@ -60,7 +60,7 @@ while true; do
         3) run_script "install-dotfiles.sh" ;;
         4) run_script "install-git-ssh-connections.sh" ;;
         5) run_script "install-vpn-proton.sh" ;;
-        6) run_script "install-postgres.sh" ;;
+        6) run_script "dotfiles/.config/noctalia/hide-apps.sh" ;;
         7) run_script "install-infra.sh" ;;
         8) run_script "install-dev-tools.sh" ;;
         s|S) run_script "sync.sh" ;;
