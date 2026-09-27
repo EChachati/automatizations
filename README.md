@@ -132,7 +132,7 @@ falls back to single-display defaults and prints a warning at startup;
 | `secret-scan.sh` | Backstop for credential-shaped lines in staged content. |
 | `install-dev-tools.sh` | Editors, Python toolchain, cloud CLIs, Claude Code. |
 | `install-git-ssh-connections.sh` | SSH keys for GitHub (one or two accounts) and GitLab. |
-| `install-vpn-pritunl.sh` | Pritunl client plus `.ovpn` profiles from `~/vpn/`. |
+| `install-vpn-proton.sh` | Proton VPN: packages, daemon, sign-in, free-tier settings. |
 | `install-postgres.sh` | Native PostgreSQL: install, init, `development` db, Docker access. |
 | `install-infra.sh` | MinIO, Redis, MongoDB, LocalStack on the `app-network` network. |
 

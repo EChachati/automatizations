@@ -44,6 +44,7 @@
 
 # --- media ---
 .config/vlc/vlcrc
+.config/transmission/settings.json
 .config/myx/config.toml
 .config/swash/settings.ini
 

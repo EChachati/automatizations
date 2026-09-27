@@ -19,20 +19,47 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
 
 # label|extended-regex
-PATTERNS=(
-    'private key|BEGIN (RSA |OPENSSH |EC |PGP |DSA )?PRIVATE KEY'
-    'aws access key|AKIA[0-9A-Z]{16}'
-    'github token|gh[pousr]_[A-Za-z0-9]{20,}'
-    'github pat|github_pat_[A-Za-z0-9_]{20,}'
-    'slack token|xox[abprs]-[A-Za-z0-9-]{10,}'
-    'discord bot token|[MN][A-Za-z0-9_-]{23}\.[A-Za-z0-9_-]{6}\.[A-Za-z0-9_-]{27}'
-    'stripe key|(sk|rk)_(live|test)_[A-Za-z0-9]{20,}'
-    'google api key|AIza[0-9A-Za-z_-]{35}'
-    'jwt|(eyJ[A-Za-z0-9_-]{8,}\.){2}[A-Za-z0-9_-]{8,}'
-    'openai key|sk-[A-Za-z0-9]{20,}'
-    'anthropic key|sk-ant-[A-Za-z0-9_-]{20,}'
-    'protonvpn|(pmt|psk)-[A-Za-z0-9]{20,}'
-    'generic assignment|(password|passwd|secret|token|api[_-]?key|client[_-]?secret|private[_-]?key)[[:space:]]*[:=][[:space:]]*.?[A-Za-z0-9/+_-]{12,}'
+# Labels and expressions live in two parallel arrays rather than in one
+# "label|regex" string. The single-string form looked tidier but split on the
+# first "|", which any alternation inside a regex destroys: the shell export
+# pattern below collapsed to "^[[:space:]]*(export", grep rejected it, and
+# because the loop treats a grep error the same as no match, a broken
+# expression became an invisible hole rather than a visible failure.
+PATTERN_LABELS=(
+    'private key'
+    'aws access key'
+    'github token'
+    'github pat'
+    'slack token'
+    'discord bot token'
+    'stripe key'
+    'google api key'
+    'jwt'
+    'openai key'
+    'anthropic key'
+    'protonvpn'
+    'generic assignment'
+    'shell export'
+)
+PATTERN_RES=(
+    'BEGIN (RSA |OPENSSH |EC |PGP |DSA )?PRIVATE KEY'
+    'AKIA[0-9A-Z]{16}'
+    'gh[pousr]_[A-Za-z0-9]{20,}'
+    'github_pat_[A-Za-z0-9_]{20,}'
+    'xox[abprs]-[A-Za-z0-9-]{10,}'
+    '[MN][A-Za-z0-9_-]{23}\.[A-Za-z0-9_-]{6}\.[A-Za-z0-9_-]{27}'
+    '(sk|rk)_(live|test)_[A-Za-z0-9]{20,}'
+    'AIza[0-9A-Za-z_-]{35}'
+    '(eyJ[A-Za-z0-9_-]{8,}\.){2}[A-Za-z0-9_-]{8,}'
+    'sk-[A-Za-z0-9]{20,}'
+    'sk-ant-[A-Za-z0-9_-]{20,}'
+    '(pmt|psk)-[A-Za-z0-9]{20,}'
+    '(password|passwd|secret|token|api[_-]?key|client[_-]?secret|private[_-]?key)[[:space:]]*[:=][[:space:]]*.?[A-Za-z0-9/+_-]{12,}'
+    # The fish form of an export has no "=" at all, and the variable name is
+    # the only hint there is. "set -gx MYX_CLIENT_ID \"...\"" has no
+    # separator and matches no word in the pattern above, so a real
+    # credential in a real per-user secrets file reported clean.
+    '^[[:space:]]*(export|set[[:space:]]+(-[[:alpha:]]+[[:space:]]+)*)[[:space:]]*[A-Za-z_]*(SECRET|TOKEN|PASSWORD|PASSWD|APIKEY|API_KEY|ACCESS_KEY|CLIENT_ID|CLIENT_SECRET|PRIVATE_KEY|CREDENTIALS?)[A-Za-z_]*[[:space:]]*'
 )
 
 # Files that legitimately match and must not trip the scan.
@@ -79,6 +106,10 @@ is_placeholder() {
     [[ "$value" =~ ^\$[A-Za-z_{] ]] && return 0
     case "$(tr '[:upper:]' '[:lower:]' <<< "$value")" in
         changeme|change_me|placeholder|example|example.com|none|null|nil|"true"|"false"|todo|"") return 0 ;;
+        # "your-key-here" is a placeholder as a whole value. The old
+        # substring test for "your[_-]" was what whitelisted real secrets
+        # containing the letters, so this is a whole-value match only.
+        your|your-*|your_*|my-*-here|replace-*) return 0 ;;
         xxx*) return 0 ;;
     esac
     return 1
@@ -87,12 +118,26 @@ is_placeholder() {
 # Scan one text file. Returns 0 when clean, 1 when something matched.
 #   $1 file to read, $2 name to show in the report
 scan_file() {
-    local file="$1" display="${2:-$1}" label pattern line lineno rc=0
-    for entry in "${PATTERNS[@]}"; do
-        label="${entry%%|*}"
-        pattern="${entry#*|}"
+    local file="$1" display="${2:-$1}" label pattern line lineno rc=0 i
+    if [ "${#PATTERN_LABELS[@]}" -ne "${#PATTERN_RES[@]}" ]; then
+        error "PATTERN_LABELS and PATTERN_RES differ in length: ${#PATTERN_LABELS[@]} vs ${#PATTERN_RES[@]}"
+    fi
+    for i in "${!PATTERN_RES[@]}"; do
+        label="${PATTERN_LABELS[$i]}"
+        pattern="${PATTERN_RES[$i]}"
+        # Fail loudly on a malformed expression. Treating "grep errored" the
+        # same as "no match" is how a broken pattern becomes a blind spot.
+        if ! printf '' | grep -qE "$pattern" 2>/dev/null; then
+            local err
+            err="$(printf '' | grep -E "$pattern" 2>&1 >/dev/null)"
+            [ -n "$err" ] && error "invalid pattern [$label]: $err"
+        fi
         lineno=0
-        while IFS= read -r line; do
+        # The "|| [ -n "$line" ]" is not optional: read returns false on a
+        # final line with no trailing newline, so a plain loop silently drops
+        # it. For a secret scanner that means a credential on the last line
+        # of a file the editor did not terminate, reported as clean.
+        while IFS= read -r line || [ -n "$line" ]; do
             lineno=$((lineno + 1))
             grep -qEi "$pattern" <<< "$line" || continue
             is_placeholder "$line" && continue
@@ -163,7 +208,7 @@ if [ "$STAGED" -eq 1 ]; then
         scan_file "$tmpfile" "$f" || found=1
     done
 else
-    while IFS= read -r f; do
+    while IFS= read -r f || [ -n "$f" ]; do
         skip_file "$f" && continue
         # A null byte means binary, so there is no text credential to leak.
         grep -qI . "$f" 2>/dev/null || continue

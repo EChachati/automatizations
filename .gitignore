@@ -37,6 +37,10 @@ dotfiles/.config/hypr/config/machine.lua
 # Written by fish on every shell start.
 dotfiles/.config/fish/fish_variables
 dotfiles/.config/fish/.gitignore
+secrets.fish
+secret.fish
+secret.*
+secrets.*
 
 # Written by micro and its plugin installer.
 dotfiles/.config/micro/buffers/
@@ -83,3 +87,13 @@ docker/localstack/volume/
 # ========================
 .DS_Store
 Thumbs.db
+
+#  Transmission — the preferences file is config, everything else is state.
+#  dht.dat, resume/ and stats.json are per-machine and change constantly, so
+#  capturing them would produce a commit every time the client runs.
+dotfiles/.config/transmission/dht.dat
+dotfiles/.config/transmission/queue.json
+dotfiles/.config/transmission/resume/
+dotfiles/.config/transmission/torrents/
+dotfiles/.config/transmission/blocklists/
+dotfiles/.config/transmission/stats.json

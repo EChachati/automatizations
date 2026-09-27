@@ -79,30 +79,34 @@ sync_packages() {
     local aurlist="$ROOT_DIR/packages/aur-explicit.list"
     [ -f "$list" ] || { note "  ${YELLOW}no packages/pacman-explicit.list, skipping${RESET}"; return; }
 
-    local installed listed pkg
-    installed="$(mktemp)"; listed="$(mktemp)"
-    trap 'rm -f "$installed" "$listed"' RETURN
+    local installed installed_all listed pkg
+    installed="$(mktemp)"; installed_all="$(mktemp)"; listed="$(mktemp)"
+    trap 'rm -f "$installed" "$installed_all" "$listed"' RETURN
 
     pacman -Qqe 2>/dev/null | sort -u > "$installed"
+
+    pacman -Qq 2>/dev/null | sort -u > "$installed_all"
     grep -vE '^\s*(#|$)' "$list" | sort -u > "$listed"
 
     # Installed but not listed: a fresh machine would not get these.
-    while IFS= read -r pkg; do
+    while IFS= read -r pkg || [ -n "$pkg" ]; do
         [ -z "$pkg" ] && continue
         pkg_added+=("$pkg")
     done < <(comm -23 "$installed" "$listed")
 
     # Listed but not installed: the list is describing a machine that
     # no longer exists.
-    while IFS= read -r pkg; do
+    while IFS= read -r pkg || [ -n "$pkg" ]; do
         [ -z "$pkg" ] && continue
         pkg_removed+=("$pkg")
-    done < <(comm -13 "$installed" "$listed")
+    done < <(comm -13 "$installed_all" "$listed")
 
-    if [ "${#pkg_removed[@]}" -gt 0 ] && [ "$DO_COMMIT" -eq 1 ] && [ "$DRY_RUN" -eq 0 ]; then
+
+    if [ "${#pkg_removed[@]}" -gt 0 ]; then
         note "  ${YELLOW}${#pkg_removed[@]} listed package(s) are no longer installed:${RESET}"
         note "        ${pkg_removed[*]}"
         note "        ${CYAN}Run scripts/snapshot-packages.sh to drop them from the list.${RESET}"
+        problems+=("${#pkg_removed[@]} listed package(s) are no longer installed: ${pkg_removed[*]}")
     fi
 
     # Only rewrite the list when something new appeared. Removing entries is
@@ -150,7 +154,7 @@ compare_dirs() {
     local f rsub hsub
 
     # Files the repo manages that no longer match the machine.
-    while IFS= read -r f; do
+    while IFS= read -r f || [ -n "$f" ]; do
         rsub="${f#"$repo"/}"
         repo_ignores "${f#"$ROOT_DIR"/}" && continue
         hsub="$home/$rsub"
@@ -168,7 +172,7 @@ compare_dirs() {
     # capture conf.d/secrets.fish.
     local repo_rel
     repo_rel="${repo#"$ROOT_DIR"/}"
-    while IFS= read -r f; do
+    while IFS= read -r f || [ -n "$f" ]; do
         rsub="${f#"$home"/}"
         hsub="$repo/$rsub"
         [ -e "$hsub" ] && continue
@@ -283,7 +287,7 @@ if [ "$DO_COMMIT" -eq 1 ] && [ "$DRY_RUN" -eq 0 ] && [ "$captured" -gt 0 ]; then
     note ""
     note "${BOLD}Commit${RESET}"
     # Stage only what the allowlist covers, then scan before committing.
-    while IFS= read -r rel; do
+    while IFS= read -r rel || [ -n "$rel" ]; do
         [ -z "$rel" ] && continue
         repo="$(repo_path "$rel")"
         [ -e "$repo" ] && git -C "$ROOT_DIR" add -- "$repo"

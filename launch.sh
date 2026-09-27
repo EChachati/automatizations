@@ -39,7 +39,7 @@ while true; do
     echo ""
     echo -e "  ${BOLD}── Services ─────────────────────────────${RESET}"
     echo "  4)  SSH keys                 (GitHub personal/work + GitLab)"
-    echo "  5)  VPN                      (Pritunl + .ovpn profiles)"
+    echo "  5)  Proton VPN               (official CLI, sign-in, settings)"
     echo "  6)  PostgreSQL               (install, init, Docker config)"
     echo "  7)  Docker infrastructure    (MinIO, Redis, MongoDB, LocalStack)"
     echo "  8)  Dev tools                (editors, python, cloud, claude)"
@@ -59,7 +59,7 @@ while true; do
         2) run_script "install-packages.sh" ;;
         3) run_script "install-dotfiles.sh" ;;
         4) run_script "install-git-ssh-connections.sh" ;;
-        5) run_script "install-vpn-pritunl.sh" ;;
+        5) run_script "install-vpn-proton.sh" ;;
         6) run_script "install-postgres.sh" ;;
         7) run_script "install-infra.sh" ;;
         8) run_script "install-dev-tools.sh" ;;

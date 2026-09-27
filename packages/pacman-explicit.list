@@ -148,6 +148,7 @@ plymouth
 poppler-glib
 power-profiles-daemon
 proton-vpn-cli
+proton-vpn-daemon
 pv
 python
 python-defusedxml
