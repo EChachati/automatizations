@@ -37,3 +37,8 @@ end
 if MONITOR_LAPTOP then addMonitor(MONITOR_LAPTOP, "1920x1080@180.00Hz", 1) end
 if MONITOR_USBC   then addMonitor(MONITOR_USBC, "preferred", 1) end
 if MONITOR_HDMI   then addMonitor(MONITOR_HDMI, "preferred", 1) end
+
+-- If you want to disable an specific Monitor
+hl.monitor({output=MONITOR_LAPTOP, disable=true})
+hl.monitor({output=MONITOR_USBC, disable=true})
+hl.monitor({output=MONITOR_HDMI, disable=true})

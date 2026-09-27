@@ -24,7 +24,6 @@ vpn/
 # ========================
 
 # Display connector names are hardware specific
-dotfiles/.config/hypr/config/machine.lua
 .machine.local
 
 # ========================
