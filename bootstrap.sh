@@ -10,7 +10,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR" && pwd)"
 
-# shellcheck source=scripts/lib/common.sh
 source "$ROOT_DIR/scripts/lib/common.sh"
 
 DRY_RUN=0
@@ -46,7 +45,6 @@ if [ "$DRY_RUN" -eq 1 ]; then
     warning "Dry run: nothing will be installed or written."
 fi
 
-# The AUR helper and pacman both need this before anything else works.
 if [ "$DRY_RUN" -eq 0 ]; then
     sudo_do true
     success "sudo works"
@@ -81,9 +79,6 @@ fi
 # ========================
 step "Done"
 
-# machine.lua is not in the repository on purpose: connector names come from
-# the hardware, and a wrong guess silently costs you a monitor. Say so out
-# loud, because the fallback connector names look like they work.
 if [ ! -e "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/config/machine.lua" ]; then
     echo ""
     warning "config/machine.lua is missing, so Hyprland is using fallback monitor names."
@@ -93,8 +88,6 @@ if [ ! -e "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/config/machine.lua" ]; then
     echo -e "      unplugged monitor will not be found."
 fi
 
-# No escape sequences here: a heredoc cannot expand them, they would be
-# printed literally.
 cat <<EOF
   Next steps:
 

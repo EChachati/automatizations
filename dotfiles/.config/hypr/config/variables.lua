@@ -21,6 +21,7 @@ if machine_ok then
     MONITOR_LAPTOP = machine.LAPTOP
     PRIMARY_MONITOR = machine.PRIMARY
 else
+    -- run 'hyprctl monitors all' and change the names accordingly  
     MONITOR_HDMI   = "HDMI-A-1"
     MONITOR_USBC   = "DP-1"
     MONITOR_LAPTOP = "eDP-1"
