@@ -8,9 +8,12 @@ CALCULATOR   = "gnome-calculator"
 
 -- Monitors
 -- The connector names are hardware specific, so they are not stored here.
--- scripts/install-machine.sh detects the connected outputs and writes
--- config/machine.lua. When that file is missing we fall back to the
--- connector names below, which is what a single-display laptop usually has.
+-- config/machine.lua holds them and is kept out of the repository on
+-- purpose: a wrong connector name does not error, it silently leaves a
+-- monitor dark. Copy machine.lua.example and fill in your own, then check
+-- it against `hyprctl monitors`.
+-- When that file is missing we fall back to the names below, which is what
+-- a single-display laptop usually has.
 local machine_ok, machine = pcall(require, "config.machine")
 if machine_ok then
     MONITOR_HDMI   = machine.HDMI
@@ -22,7 +25,7 @@ else
     MONITOR_USBC   = "DP-1"
     MONITOR_LAPTOP = "eDP-1"
     PRIMARY_MONITOR = MONITOR_USBC
-    print("[hyprland] config/machine.lua not found, using fallback connectors. Run scripts/install-machine.sh to detect your displays.")
+    print("[hyprland] config/machine.lua not found, using fallback connectors. Copy machine.lua.example and set your own, or an unplugged monitor will stay dark.")
 end
 
 -- Workspaces

@@ -3,7 +3,7 @@
 #  bootstrap.sh
 #  One command to turn a fresh install into this exact machine.
 #
-#  Usage: ./bootstrap.sh [--dry-run] [--skip-packages] [--skip-machine]
+#  Usage: ./bootstrap.sh [--dry-run] [--skip-packages]
 # ========================
 set -euo pipefail
 
@@ -15,19 +15,17 @@ source "$ROOT_DIR/scripts/lib/common.sh"
 
 DRY_RUN=0
 SKIP_PACKAGES=0
-SKIP_MACHINE=0
 for arg in "$@"; do
     case "$arg" in
         --dry-run|-n)     DRY_RUN=1 ;;
         --skip-packages)  SKIP_PACKAGES=1 ;;
-        --skip-machine)   SKIP_MACHINE=1 ;;
         -h|--help)        grep '^#' "$0" | sed 's/^# \?//'; exit 0 ;;
         *) error "Unknown option: $arg" ;;
     esac
 done
 
 step=0
-TOTAL_STEPS=5
+TOTAL_STEPS=3
 step() { step=$((step + 1)); echo ""; echo -e "${BOLD}${CYAN}[$step/$TOTAL_STEPS] $1${RESET}"; echo ""; }
 
 echo -e "${BOLD}${GREEN}"
@@ -79,21 +77,22 @@ else
 fi
 
 # ========================
-#  3. Machine specific
-# ========================
-step "Machine specific (displays, GPU, snapshots, power)"
-if [ "$SKIP_MACHINE" -eq 1 ]; then
-    warning "Skipped (--skip-machine)"
-elif [ "$DRY_RUN" -eq 1 ]; then
-    "$ROOT_DIR/scripts/install-machine.sh" --dry-run
-else
-    "$ROOT_DIR/scripts/install-machine.sh"
-fi
-
-# ========================
 #  Wrapping up
 # ========================
 step "Done"
+
+# machine.lua is not in the repository on purpose: connector names come from
+# the hardware, and a wrong guess silently costs you a monitor. Say so out
+# loud, because the fallback connector names look like they work.
+if [ ! -e "${XDG_CONFIG_HOME:-$HOME/.config}/hypr/config/machine.lua" ]; then
+    echo ""
+    warning "config/machine.lua is missing, so Hyprland is using fallback monitor names."
+    echo -e "      Copy the example and set your own connectors:"
+    echo -e "      ${CYAN}cp dotfiles/.config/hypr/config/machine.lua.example ~/.config/hypr/config/machine.lua${RESET}"
+    echo -e "      ${CYAN}hyprctl monitors${RESET} lists the connected ones. Until you do, an"
+    echo -e "      unplugged monitor will not be found."
+fi
+
 # No escape sequences here: a heredoc cannot expand them, they would be
 # printed literally.
 cat <<EOF

@@ -95,34 +95,37 @@ gitignored and never overwritten, so set it up once per machine.
 
 ## Machine-specific setup
 
-Displays, GPU, bootloader, snapshots and power cannot be captured as
-files, because they depend on the hardware. `scripts/install-machine.sh`
-detects them instead of hardcoding them.
+Displays, GPU, bootloader, snapshots and power depend on the hardware, so
+they are not in this repository. This repo is for the steady state; what a
+machine is *made of* gets set up once, outside of it.
 
 The display mapping is the part worth understanding. Connector names like
 `DP-1` or `HDMI-A-2` differ per machine, so they are not in the dotfiles.
-The script asks `hyprctl` which outputs are connected and writes
-`~/.config/hypr/config/machine.lua`, which `config/variables.lua` picks up
-through a `require`. If that file is missing, the config falls back to
-single-display defaults and says so on startup.
-
-**Run it with every monitor plugged in.** A connector that is not connected
-cannot be detected, and the script warns when it had to guess.
+They live in `~/.config/hypr/config/machine.lua`, which `config/variables.lua`
+picks up through a `require`. A wrong connector name does not raise an error —
+it silently leaves a monitor dark — so that file is written by hand and kept
+out of git, and there is no script that guesses it for you.
 
 ```bash
-./scripts/install-machine.sh                    # everything
-./scripts/install-machine.sh --only monitors    # just the display mapping
-hyprctl reload                                  # apply without restarting
+cp dotfiles/.config/hypr/config/machine.lua.example ~/.config/hypr/config/machine.lua
+$EDITOR ~/.config/hypr/config/machine.lua
+hyprctl monitors      # check the names against the connected outputs
+hyprctl reload        # apply without restarting
 ```
+
+Fill in every connector you might use, not only the ones plugged in right
+now: an unplugged monitor is still a real output, and Hyprland will not find
+it if its name is not in the mapping. If the file is missing, the config
+falls back to single-display defaults and prints a warning at startup;
+`bootstrap.sh` and the sync report both point at it.
 
 ## Scripts
 
 | Script | Description |
 |--------|-------------|
-| `bootstrap.sh` | Packages, then dotfiles, then machine setup. |
+| `bootstrap.sh` | Packages, then dotfiles. |
 | `install-packages.sh` | Replays `packages/*.list`. `--dry-run` lists without installing. |
 | `install-dotfiles.sh` | Links `dotfiles/`, renders `ktemplated/`. |
-| `install-machine.sh` | Displays, hostname, GPU, bootloader, snapper, power. |
 | `snapshot-packages.sh` | Re-captures the installed package set. |
 | `install-timer.sh` | Installs the sync timer and the pre-commit hook. `--uninstall` removes both. |
 | `sync.sh` | Walks the allowlist, refreshes packages, commits. `--dry-run` changes nothing. |
@@ -133,9 +136,8 @@ hyprctl reload                                  # apply without restarting
 | `install-postgres.sh` | Native PostgreSQL: install, init, `development` db, Docker access. |
 | `install-infra.sh` | MinIO, Redis, MongoDB, LocalStack on the `app-network` network. |
 
-All of them accept `--dry-run` and `-h`/`--help`. `install-machine.sh`
-also takes `--only <topics>` and `--target <dir>` (`install-dotfiles.sh`
-takes `--target` too), which is handy for testing without a real machine.
+All of them accept `--dry-run` and `-h`/`--help`. The install scripts also
+take `--target <dir>`, which is handy for testing without a real machine.
 
 ## Staying in sync
 

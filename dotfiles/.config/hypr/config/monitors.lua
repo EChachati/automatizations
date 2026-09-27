@@ -32,6 +32,9 @@ local function addMonitor(monitor_name, mode, scale)
 end
 
 
-addMonitor(MONITOR_LAPTOP, "1920x1080@180.00Hz", 1)
-addMonitor(MONITOR_USBC, "preferred", 1)
-addMonitor(MONITOR_HDMI, "preferred", 1)
+-- Each addMonitor is guarded: a connector you left as nil in machine.lua
+-- would otherwise be a nil argument here and take the whole config down
+-- with it, instead of just meaning "I do not have that display".
+if MONITOR_LAPTOP then addMonitor(MONITOR_LAPTOP, "1920x1080@180.00Hz", 1) end
+if MONITOR_USBC   then addMonitor(MONITOR_USBC, "preferred", 1) end
+if MONITOR_HDMI   then addMonitor(MONITOR_HDMI, "preferred", 1) end

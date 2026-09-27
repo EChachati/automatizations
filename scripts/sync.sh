@@ -252,7 +252,7 @@ sync_paths() {
     for rel in "${REPORT_ONLY[@]}"; do
         [ -z "$rel" ] && continue
         if [ ! -e "$HOME/$rel" ] && [ ! -e "$(repo_path "$rel")" ]; then
-            problems+=("generated file missing, run install-machine.sh: $rel")
+            problems+=("local-only file missing, see its .example: $rel")
         fi
     done
 }

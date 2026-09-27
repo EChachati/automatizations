@@ -1,0 +1,44 @@
+-- Machine-specific monitor mapping.
+--
+-- Copy this file to ~/.config/hypr/config/machine.lua and fill in your own
+-- connector names. It is deliberately NOT in the repository: connector names
+-- come from the hardware, and a wrong name does not error, it silently
+-- leaves a monitor dark.
+--
+--   cp dotfiles/.config/hypr/config/machine.lua.example \
+--      ~/.config/hypr/config/machine.lua
+--
+-- Find your names with:
+--
+--   hyprctl monitors
+--
+-- Read the connector name from the "Monitor <NAME> (ID ...)" line, and the
+-- resolution, refresh rate and position from the block below it.
+
+return {
+    -- The external display, whatever cable you use to drive it.
+    -- "DP-1" on a laptop, "HDMI-A-2" on a desktop, "DP-3" on a dock.
+    HDMI = "DP-1",
+
+    -- A second external display. Set to nil if you only have one; the config
+    -- skips it rather than failing. Do not leave it as a made-up name, or
+    -- Hyprland will simply never match it.
+    USBC = nil,
+
+    -- The internal panel. Almost always eDP-1 on a laptop, or nil on a desktop.
+    LAPTOP = "eDP-1",
+
+    -- Which output the bar, the background and new windows go on.
+    PRIMARY = "DP-1",
+}
+
+-- Two things that are easy to get wrong:
+--
+--   1. Fill in every connector you might plug into later, not just the ones
+--      attached right now. Hyprland only looks up a monitor by name when
+--      something is connected to it, so an unplugged external display is
+--      still a real output that needs a name.
+--
+--   2. If the name is wrong you get no error, just no picture. If a monitor
+--      stays dark, compare the name here against `hyprctl monitors` and
+--      reload with `hyprctl reload`.

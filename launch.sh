@@ -33,17 +33,16 @@ while true; do
     echo "  ╚══════════════════════════════════════════╝"
     echo -e "${RESET}"
     echo -e "  ${BOLD}── Machine ──────────────────────────────${RESET}"
-    echo "  1)  Bootstrap everything     (packages + dotfiles + machine)"
+    echo "  1)  Bootstrap everything     (packages + dotfiles)"
     echo "  2)  Install packages         (replay packages/*.list)"
     echo "  3)  Install dotfiles         (link dotfiles/ + render ktemplated/)"
-    echo "  4)  Machine specifics        (displays, GPU, bootloader, snapper, power)"
     echo ""
     echo -e "  ${BOLD}── Services ─────────────────────────────${RESET}"
-    echo "  5)  SSH keys                 (GitHub personal/work + GitLab)"
-    echo "  6)  VPN                      (Pritunl + .ovpn profiles)"
-    echo "  7)  PostgreSQL               (install, init, Docker config)"
-    echo "  8)  Docker infrastructure    (MinIO, Redis, MongoDB, LocalStack)"
-    echo "  9)  Dev tools                (editors, python, cloud, claude)"
+    echo "  4)  SSH keys                 (GitHub personal/work + GitLab)"
+    echo "  5)  VPN                      (Pritunl + .ovpn profiles)"
+    echo "  6)  PostgreSQL               (install, init, Docker config)"
+    echo "  7)  Docker infrastructure    (MinIO, Redis, MongoDB, LocalStack)"
+    echo "  8)  Dev tools                (editors, python, cloud, claude)"
     echo ""
     echo -e "  ${BOLD}── Tools ───────────────────────────────${RESET}"
     echo "  s)  Sync now                 (allowlist + packages, local commit)"
@@ -59,12 +58,11 @@ while true; do
         1) run_script "../bootstrap.sh" ;;
         2) run_script "install-packages.sh" ;;
         3) run_script "install-dotfiles.sh" ;;
-        4) run_script "install-machine.sh" ;;
-        5) run_script "install-git-ssh-connections.sh" ;;
-        6) run_script "install-vpn-pritunl.sh" ;;
-        7) run_script "install-postgres.sh" ;;
-        8) run_script "install-infra.sh" ;;
-        9) run_script "install-dev-tools.sh" ;;
+        4) run_script "install-git-ssh-connections.sh" ;;
+        5) run_script "install-vpn-pritunl.sh" ;;
+        6) run_script "install-postgres.sh" ;;
+        7) run_script "install-infra.sh" ;;
+        8) run_script "install-dev-tools.sh" ;;
         s|S) run_script "sync.sh" ;;
         a|A) run_script "install-timer.sh" ;;
         p|P) run_script "snapshot-packages.sh" ;;
