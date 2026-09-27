@@ -99,7 +99,7 @@ source = "wallpaper"
     [theme.templates]
     builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "alacritty" ]
     enable_community_templates = true
-    community_ids = [ "zen-browser", "obsidian" ]
+    community_ids = [ "zen-browser", "obsidian", "vscode" ]
 
 [wallpaper]
 directory = "@HOME@/Pictures/wallpapers"
