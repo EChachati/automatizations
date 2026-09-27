@@ -46,7 +46,9 @@ while true; do
     echo "  9)  Dev tools                (editors, python, cloud, claude)"
     echo ""
     echo -e "  ${BOLD}── Tools ───────────────────────────────${RESET}"
-    echo "  s)  Snapshot current machine (refresh packages/*.list)"
+    echo "  s)  Sync now                 (allowlist + packages, local commit)"
+    echo "  a)  Auto-sync timer          (install or remove the systemd timer)"
+    echo "  p)  Snapshot current machine (refresh packages/*.list)"
     echo ""
     echo -e "  ${BOLD}── Other ────────────────────────────────${RESET}"
     echo "  0)  Exit"
@@ -63,7 +65,9 @@ while true; do
         7) run_script "install-postgres.sh" ;;
         8) run_script "install-infra.sh" ;;
         9) run_script "install-dev-tools.sh" ;;
-        s|S) run_script "snapshot-packages.sh" ;;
+        s|S) run_script "sync.sh" ;;
+        a|A) run_script "install-timer.sh" ;;
+        p|P) run_script "snapshot-packages.sh" ;;
         0) echo ""; success "Bye!"; echo ""; exit 0 ;;
         *) warning "Invalid option."; sleep 0.8 ;;
     esac

@@ -60,6 +60,7 @@ dotfiles/.config/hypr/noctalia.lua
 dotfiles/.config/kitty/themes/
 dotfiles/.config/alacritty/themes/
 dotfiles/.config/foot/themes/
+dotfiles/.config/qt6ct/colors/
 dotfiles/.config/gtk-3.0/noctalia.css
 dotfiles/.config/gtk-4.0/noctalia.css
 dotfiles/.config/gtk-4.0/thumbnail.png

@@ -124,6 +124,9 @@ hyprctl reload                                  # apply without restarting
 | `install-dotfiles.sh` | Links `dotfiles/`, renders `ktemplated/`. |
 | `install-machine.sh` | Displays, hostname, GPU, bootloader, snapper, power. |
 | `snapshot-packages.sh` | Re-captures the installed package set. |
+| `install-timer.sh` | Installs the sync timer and the pre-commit hook. `--uninstall` removes both. |
+| `sync.sh` | Walks the allowlist, refreshes packages, commits. `--dry-run` changes nothing. |
+| `secret-scan.sh` | Backstop for credential-shaped lines in staged content. |
 | `install-dev-tools.sh` | Editors, Python toolchain, cloud CLIs, Claude Code. |
 | `install-git-ssh-connections.sh` | SSH keys for GitHub (one or two accounts) and GitLab. |
 | `install-vpn-pritunl.sh` | Pritunl client plus `.ovpn` profiles from `~/vpn/`. |
@@ -133,6 +136,47 @@ hyprctl reload                                  # apply without restarting
 All of them accept `--dry-run` and `-h`/`--help`. `install-machine.sh`
 also takes `--only <topics>` and `--target <dir>` (`install-dotfiles.sh`
 takes `--target` too), which is handy for testing without a real machine.
+
+## Staying in sync
+
+A machine drifts from its config the moment you change a setting. A timer
+walks the allowlist twice a day and turns that drift into a local commit:
+
+```sh
+./scripts/install-timer.sh          # once, per machine
+./scripts/sync.sh --dry-run         # see what it would do
+```
+
+Three things it will not do, on purpose:
+
+- **It never pushes.** A commit lands locally where you can read it. Push is
+  a separate, deliberate act; this repository is public, and automation that
+  publishes on its own turns a bad afternoon into a disclosure.
+- **It never overwrites a tracked file.** If the live config and the repo
+  disagree, that gets reported for review instead. Otherwise the timer would
+  silently revert every setting you changed, which is how you lose an
+  afternoon to a `git checkout`.
+- **It never captures runtime state.** `.gitignore` is the shared policy for
+  both git and the capture step, so a path ignored in one is invisible in the
+  other.
+
+`config/managed-paths.list` is the allowlist, and the only boundary the
+automation has. A path absent from it is invisible to `sync.sh` by
+construction. Prefer naming a specific file over listing a directory: an
+allowlisted directory also admits whatever the app writes into it later, and
+`sync.sh` commits what it is allowed to see.
+
+Results land in `~/.local/state/automatizations/sync-report.txt` and in
+`journalctl --user -u automatizations-sync.service`. The service runs with
+`ProtectHome=read-only`, so a bug in the capture logic cannot touch your live
+config.
+
+The pre-commit hook is enabled through `core.hooksPath=.githooks` so it is
+versioned rather than sitting unversioned in `.git/hooks`. It aborts a commit
+containing a credential-shaped line, and a failed scan also deletes what was
+just captured — otherwise the file would sit untracked until some later
+`git add -A` committed it without passing through the check. The hook is a
+backstop, not a guarantee: the allowlist is the real boundary.
 
 ## Deliberately not versioned
 

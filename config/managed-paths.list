@@ -60,7 +60,6 @@
 .config/gtk-3.0/settings.ini
 .config/gtk-4.0/gtk.css
 .config/qt6ct/qt6ct.conf
-.config/qt6ct/colors
 .config/qt6ct/qss
 
 # --- apps with real settings worth keeping ---
@@ -71,3 +70,4 @@
 
 # --- generated per machine, checked but never captured ---
 ?.config/hypr/config/machine.lua
+?.config/qt6ct/colors
