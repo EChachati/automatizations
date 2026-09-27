@@ -1,0 +1,48 @@
+# Lista de apps del menu. Pon true para OCULTAR, false para MOSTRAR.
+# Tras editar, ejecuta: ~/.config/noctalia/hide-apps.sh
+# Para refrescar esta lista: ~/.config/noctalia/sync-hidden-apps.sh
+#
+# Formato:  <id.desktop> = true|false     # Nombre
+#
+Alacritty.desktop                             = false # Alacritty
+avahi-discover.desktop                        = true  # Avahi Zeroconf Browser
+bssh.desktop                                  = true  # Avahi SSH Server Browser
+btop.desktop                                  = false # btop++
+btrfs-assistant.desktop                       = true # Btrfs Assistant
+bvnc.desktop                                  = true  # Avahi VNC Server Browser
+cachyos-hello.desktop                         = true  # CachyOS Hello
+cachyos-pi.desktop                            = true  # CachyOS Package Installer
+com.interversehq.qView.desktop                = true  # qView
+com.obsproject.Studio.desktop                 = false # OBS Studio
+com.shellyorg.shelly.desktop                  = false # Shelly
+dev.lemmy.swash.desktop                       = false # Swash
+dev.noctalia.Noctalia.desktop                 = true  # Noctalia
+discord.desktop                               = false # Discord
+firefox.desktop                               = false # Firefox
+gimp.desktop                                  = false # GNU Image Manipulation Program
+kitty.desktop                                 = false # kitty
+limine-snapper-restore.desktop                = false # Limine-snapper-restore
+localsend.desktop                             = false # LocalSend
+lstopo.desktop                                = true  # Hardware Locality lstopo
+micro.desktop                                 = false # Micro
+nvidia-settings.desktop                       = false # NVIDIA X Server Settings
+nwg-look.desktop                              = true  # GTK Settings
+obsidian.desktop                              = false # Obsidian
+org.cachyos.KernelManager.desktop             = true # CachyOS Kernel Manager
+org.cachyos.scx-manager.desktop               = true  # SchedExt GUI Manager
+org.gnome.Calculator.desktop                  = false # Calculator
+org.gnome.TextEditor.desktop                  = true  # Text Editor
+org.kde.dolphin.desktop                       = false # Dolphin
+org.kde.krita.desktop                         = false # Krita
+org.pulseaudio.pavucontrol.desktop            = true  # Volume Control
+qt6ct.desktop                                 = true  # Qt6 Settings
+qv4l2.desktop                                 = true  # Qt V4L2 test Utility
+qvidcap.desktop                               = true  # Qt V4L2 video capture utility
+steam.desktop                                 = false # Steam
+transmission-qt.desktop                       = false # Transmission (Qt)
+uuctl.desktop                                 = true  # uuctl
+vim.desktop                                   = false # Vim
+vlc.desktop                                   = false # VLC media player
+vscodium.desktop                              = true  # VSCodium
+vscodium-wayland.desktop                      = false # VSCodium - Wayland
+zen.desktop                                   = false # Zen Browser

@@ -17,9 +17,12 @@ error()   { echo -e "${RED}[ERROR]${RESET} $1"; exit 1; }
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Shell-agnostic env persistence and shell detection (bash/zsh/fish)
-# shellcheck source=shell_config.sh
-source "$SCRIPT_DIR/shell_config.sh"
+# Shared colors/logging, plus shell-agnostic env persistence and shell
+# detection (bash/zsh/fish).
+# shellcheck source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+# shellcheck source=lib/shell_config.sh
+source "$SCRIPT_DIR/lib/shell_config.sh"
 
 # ========================
 #  Detect AUR helper

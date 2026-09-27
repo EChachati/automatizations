@@ -22,12 +22,15 @@ step()    { echo -e "\n${BOLD}${CYAN}==>${RESET}${BOLD} $1${RESET}"; }
 #  Config
 # ========================
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCKER_SOURCES="$SCRIPT_DIR/docker"   # repo folder with redis/, mongodb/, localstack/
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+DOCKER_SOURCES="$ROOT_DIR/docker"    # repo folder with redis/, mongodb/, localstack/
 DOCKER_DIR="$HOME/docker"             # where services are deployed
 
 # Shell-agnostic env persistence (bash/zsh/fish)
-# shellcheck source=shell_config.sh
-source "$SCRIPT_DIR/shell_config.sh"
+# shellcheck source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
+# shellcheck source=lib/shell_config.sh
+source "$SCRIPT_DIR/lib/shell_config.sh"
 
 # ========================
 #  Helpers

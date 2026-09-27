@@ -1,0 +1,19 @@
+[user]
+	email = @GIT_EMAIL@
+	name = @GIT_NAME@
+[init]
+	defaultBranch = main
+[color]
+	ui = auto
+[alias]
+	lg = "log --oneline --graph --decorate --all"
+	st = "status -sb"
+	co = "checkout"
+	br = "branch"
+	last = "log -1 HEAD --stat"
+[push]
+	default = simple
+[pull]
+	ff = only
+[fetch]
+	prune = true

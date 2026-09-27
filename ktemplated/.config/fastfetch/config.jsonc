@@ -1,0 +1,94 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
+  "logo": {
+    "type": "kitty",
+    "source": "@HOME@/Pictures/fastfetch/logo.png",
+    "width": 30
+  },
+  "modules": [
+
+    {
+      "type": "custom",
+      "format": ""
+    },
+    {
+      "type": "custom",
+      "format": ""
+    },
+    {
+      "type": "custom",
+      "format": "{#34}╭─➤ {#36}◈ {#34}HARDWARE ⟵──────────────────────────────────────────────────╮"
+    },
+    {
+      "type": "custom",
+      "format": "{#34}╰─────────────────────────────────────────────────────────────────╯"
+    },
+    {
+      "type": "cpu",
+      "key": "{#34}  │  {#36}◈ CPU ",
+      "outputColor": "33"
+    },
+    {
+      "type": "gpu",
+      "key": "{#34}  │  {#36}◈ GPU ",
+      "outputColor": "33"
+    },
+    {
+      "type": "memory",
+      "key": "{#34}  │  {#36}◈ RAM ",
+      "outputColor": "33"
+    },
+    {
+      "type": "disk",
+      "key": "{#34}  │  {#36}◈ DISK",
+      "outputColor": "33"
+    },
+    {
+      "type": "custom",
+      "format": "{#34}  ╰───────────────────────────────────────────────────────────────╯"
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "{#33}╭─➤ {#33}◈ {#33}SOFTWARE ⟵──────────────────────────────────────────────────╮"
+    },
+    {
+      "type": "custom",
+      "format": "{#33}╰─────────────────────────────────────────────────────────────────╯"
+    },
+    {
+      "type": "os",
+      "key": "{#33}  │  {#33}◈ OS           ",
+      "outputColor": "34"
+    },
+    {
+      "type": "kernel",
+      "key": "{#33}  │  {#33}◈ KERNEL       ",
+      "outputColor": "34" 
+    },
+    {
+      "type": "shell",
+      "key": "{#33}  │  {#33}◈ SHELL        ",
+      "outputColor": "34"
+    },
+    {
+      "type": "packages",
+      "key": "{#33}  │  {#33}◈ PCKG MANAGER ",
+      "outputColor": "34"
+    },
+    {
+      "type": "terminal",
+      "key": "{#33}  │  {#33}◈ TERMINAL     ",
+      "outputColor": "34"
+    },
+    {
+      "type": "wm",
+      "key": "{#33}  │  {#33}◈ WM           ",
+      "outputColor": "34"
+    },
+    {
+      "type": "custom",
+      "format": "{#33}  ╰───────────────────────────────────────────────────────────────╯"
+    }
+  ]
+}

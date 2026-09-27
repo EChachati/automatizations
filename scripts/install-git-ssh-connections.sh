@@ -71,6 +71,7 @@ setup_ssh_dir() {
     step "Preparing ~/.ssh directory"
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
+    # shellcheck disable=SC2088  # the tilde is meant to be shown to the user
     success "~/.ssh ready"
 }
 
@@ -258,6 +259,7 @@ EOF
     fi
 
     chmod 600 "$config"
+    # shellcheck disable=SC2088  # the tilde is meant to be shown to the user
     success "~/.ssh/config created"
 }
 
