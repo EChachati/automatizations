@@ -19,7 +19,7 @@ if machine_ok then
     PRIMARY_MONITOR = machine.PRIMARY
 else
     MONITOR_HDMI   = "HDMI-A-1"
-    MONITOR_USBC   = "eDP-1"
+    MONITOR_USBC   = "DP-1"
     MONITOR_LAPTOP = "eDP-1"
     PRIMARY_MONITOR = MONITOR_USBC
     print("[hyprland] config/machine.lua not found, using fallback connectors. Run scripts/install-machine.sh to detect your displays.")
