@@ -4,7 +4,7 @@
 #scrolloff = 3
 
 # Resume the locally saved track, source and position when Myx starts.
-#restore_on_startup = true
+restore_on_startup = true
 
 # Spotify app client id. MYX_CLIENT_ID overrides this if it is set.
 #client_id = ""
@@ -12,11 +12,11 @@
 # Terminal graphics protocol: kitty, iterm2, sixel or halfblocks.
 # Leave it commented to auto-detect; set it if album art comes out as a coarse
 # mosaic, which means the detection query went unanswered.
-#protocol = "kitty"
+protocol = "kitty"
 
 # Streaming quality in kbps: 96, 160 or 320. Any other whole number falls
 # back to 160.
-#bitrate = 160
+bitrate = 320
 
 # Even out loudness across tracks, like the official client's "Normalize
 # volume". Leave it off to keep each track's own dynamics.
