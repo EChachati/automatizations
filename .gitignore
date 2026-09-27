@@ -60,7 +60,7 @@ dotfiles/.config/cachyos/cachyos-pi/
 # These are rendered from the wallpaper, which is not in this repository.
 # Noctalia rewrites them on startup, so a fresh install regenerates them.
 # Tracking them would mean a commit on every wallpaper change.
-dotfiles/.config/hypr/noctalia.lua
+# dotfiles/.config/hypr/noctalia.lua
 dotfiles/.config/kitty/themes/
 dotfiles/.config/alacritty/themes/
 dotfiles/.config/foot/themes/
