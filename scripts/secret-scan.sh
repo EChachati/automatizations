@@ -77,6 +77,11 @@ skip_file() {
 
 # True when the assigned value is itself a placeholder.
 #
+# Known limit: shell exports are detected by variable name, so a secret in a
+# variable called SK or AUTH is not caught, because widening the name list
+# buys more false positives than it buys coverage. That is why
+# config/managed-paths.list is the real boundary and this is the backstop.
+#
 # The test is on the whole value, never on the line. Matching a word
 # anywhere is a false negative waiting to happen: "AKIAIOSFODNN7EXAMPLE",
 # the canonical fake AWS key, contains "example", so a substring test
@@ -107,11 +112,18 @@ is_placeholder() {
     case "$(tr '[:upper:]' '[:lower:]' <<< "$value")" in
         changeme|change_me|placeholder|example|example.com|none|null|nil|"true"|"false"|todo|"") return 0 ;;
         # "your-key-here" is a placeholder as a whole value. The old
-        # substring test for "your[_-]" was what whitelisted real secrets
-        # containing the letters, so this is a whole-value match only.
+        # substring test for "your[_-]" is what whitelisted real secrets
+        # containing those letters, so this is a whole-value match only.
         your|your-*|your_*|my-*-here|replace-*) return 0 ;;
-        xxx*) return 0 ;;
     esac
+    # Dots and stars standing in for a value, the way documentation writes
+    # it: export GITHUB_TOKEN="..." should not flag this scanner's own README.
+    case "$value" in
+        .|..|...|....|*.*|*\**) return 0 ;;
+    esac
+    # A run of x is the classic redaction, but only as the whole value:
+    # "xxxxx-actual-secret" is not a placeholder.
+    [[ "$value" =~ ^[Xx]+$ ]] && return 0
     return 1
 }
 
