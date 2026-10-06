@@ -3,8 +3,8 @@
 # segun la lista en ~/.config/noctalia/hidden-apps.list.
 #
 # Formato de la lista:
-#   <id.desktop> = true    -> oculta la app (crea override con NoDisplay=true)
-#   <id.desktop> = false   -> la muestra de nuevo (borra el override)
+#   <id.desktop> = false    -> oculta la app (crea override con NoDisplay=false)
+#   <id.desktop> = true   -> la muestra de nuevo (borra el override)
 #
 # Uso: hide-apps.sh
 set -euo pipefail
@@ -45,13 +45,13 @@ hide_app() {
   name=$(normalize "$1")
   override="$TARGET_DIR/$name"
   if [[ -f "$override" ]]; then
-    grep -q '^NoDisplay=true' "$override" || printf 'NoDisplay=true\n' >> "$override"
+    grep -q '^NoDisplay=false' "$override" || printf 'NoDisplay=false\n' >> "$override"
     echo "oculta (ya estaba): $name"
     return
   fi
   if src=$(find_source "$name"); then
     cp "$src" "$override"
-    printf 'NoDisplay=true\n' >> "$override"
+    printf 'NoDisplay=false\n' >> "$override"
     echo "oculta: $name"
   else
     echo "no se encontro $name en ningun directorio de aplicaciones"
@@ -81,9 +81,9 @@ while IFS= read -r line || [[ -n "$line" ]]; do
   val="${val,,}"                     # a minusculas
   [[ -z "$id" ]] && continue
   case "$val" in
-    true|1|yes|si|s) hide_app "$id" ;;
-    false|0|no|n)    show_app "$id" ;;
-    *) echo "valor invalido para $id: '$val' (usa true/false)";;
+    false|1|yes|si|s) hide_app "$id" ;;
+    true|0|no|n)    show_app "$id" ;;
+    *) echo "valor invalido para $id: '$val' (usa false/true)";;
   esac
 done < "$LIST"
 
