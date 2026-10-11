@@ -3,8 +3,8 @@
 # segun la lista en ~/.config/noctalia/hidden-apps.list.
 #
 # Formato de la lista:
-#   <id.desktop> = true    -> oculta la app (crea override con NoDisplay=true)
-#   <id.desktop> = false   -> la muestra de nuevo (borra el override)
+#   <id.desktop> = true   -> oculta la app (crea override con Hidden=true)
+#   <id.desktop> = false  -> la muestra de nuevo (borra el override)
 #
 # Uso: hide-apps.sh
 set -euo pipefail
@@ -45,13 +45,13 @@ hide_app() {
   name=$(normalize "$1")
   override="$TARGET_DIR/$name"
   if [[ -f "$override" ]]; then
-    grep -q '^NoDisplay=true' "$override" || printf 'NoDisplay=true\n' >> "$override"
+    grep -q '^Hidden=true' "$override" || printf 'Hidden=true\n' >> "$override"
     echo "oculta (ya estaba): $name"
     return
   fi
   if src=$(find_source "$name"); then
     cp "$src" "$override"
-    printf 'NoDisplay=true\n' >> "$override"
+    printf 'Hidden=true\n' >> "$override"
     echo "oculta: $name"
   else
     echo "no se encontro $name en ningun directorio de aplicaciones"

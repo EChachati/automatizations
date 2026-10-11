@@ -3,7 +3,7 @@
 # Para refrescar esta lista: ~/.config/noctalia/sync-hidden-apps.sh
 #
 # Formato:  <id.desktop> = true|false     # Nombre
-#
+# NAME                                        # HIDDEN
 avahi-discover.desktop                        = true  # Avahi Zeroconf Browser
 bssh.desktop                                  = true  # Avahi SSH Server Browser
 btop.desktop                                  = false # btop++

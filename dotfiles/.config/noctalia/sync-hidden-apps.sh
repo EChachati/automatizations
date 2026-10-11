@@ -60,14 +60,14 @@ tmp=$(mktemp)
 } > "$tmp"
 
 added=0; kept=0
-for b in $(printf '%s\n' "${order[@]}" | sort); do
+while IFS= read -r b; do
   f="${best[$b]}"
 
   # Ya ocultada por override del usuario -> siempre true
   if [[ -f "$OVERRIDE_DIR/$b" ]]; then
     val=true
   # No aparece en menus -> no la listamos
-  elif grep -qE '^(NoDisplay|Hidden)=true' "$f"; then
+  elif grep -qE '^Hidden=true' "$f"; then
     continue
   # Respetar la eleccion previa del usuario
   elif [[ -n "${state[$b]:-}" ]]; then
@@ -80,7 +80,7 @@ for b in $(printf '%s\n' "${order[@]}" | sort); do
 
   name=$(grep -m1 '^Name=' "$f" | cut -d= -f2-)
   printf '%-45s = %-5s # %s\n' "$b" "$val" "${name:-$b}" >> "$tmp"
-done
+done < <(printf '%s\n' "${order[@]}" | sort)
 
 cp "$tmp" "$LIST"
 rm -f "$tmp"
