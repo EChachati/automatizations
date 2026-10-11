@@ -30,8 +30,8 @@ if [[ -f "$LIST" ]]; then
     id="${id//[[:space:]]/}"; val="${val,,}"; val="${val//[[:space:]]/}"
     [[ -z "$id" ]] && continue
     case "$val" in
-      true|1|yes|si|s)      state[$id]=true ;;
-      false|0|no|n|"")      state[$id]=false ;;
+      true|1|yes|si|s)      state[$id]=false ;;
+      false|0|no|n|"")      state[$id]=true ;;
     esac
   done < "$LIST"
 fi
@@ -51,7 +51,7 @@ done
 
 tmp=$(mktemp)
 {
-  printf '# Lista de apps del menu. Pon true para OCULTAR, false para MOSTRAR.\n'
+  printf '# Lista de apps del menu. Pon false para OCULTAR, true para MOSTRAR.\n'
   printf '# Tras editar, ejecuta: ~/.config/noctalia/hide-apps.sh\n'
   printf '# Para refrescar esta lista: ~/.config/noctalia/sync-hidden-apps.sh\n'
   printf '#\n'
@@ -63,17 +63,17 @@ added=0; kept=0
 for b in $(printf '%s\n' "${order[@]}" | sort); do
   f="${best[$b]}"
 
-  # Ya ocultada por override del usuario -> siempre true
+  # Ya ocultada por override del usuario -> siempre false
   if [[ -f "$OVERRIDE_DIR/$b" ]]; then
-    val=true
+    val=false
   # No aparece en menus -> no la listamos
-  elif grep -qE '^(NoDisplay|Hidden)=true' "$f"; then
+  elif grep -qE '^(Display)=false' "$f"; then
     continue
   # Respetar la eleccion previa del usuario
   elif [[ -n "${state[$b]:-}" ]]; then
     val="${state[$b]}"
   else
-    val=false
+    val=true
     added=$((added+1))
   fi
   [[ -n "${state[$b]:-}" ]] && kept=$((kept+1))
@@ -85,5 +85,5 @@ done
 cp "$tmp" "$LIST"
 rm -f "$tmp"
 echo "Lista actualizada: $LIST"
-echo "  $added nueva(s) en false, $kept conservadas."
+echo "  $added nueva(s) en True, $kept conservadas."
 echo "Ahora ejecuta: ~/.config/noctalia/hide-apps.sh"
